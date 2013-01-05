@@ -1,11 +1,13 @@
 #include <iostream>
 #include <cmath>
+#include <boost/program_options.hpp>
 #include "md5.hpp"
 
 using namespace std;
 using namespace md5;
+namespace po = boost::program_options;
 
-uint32 hash(const char* text, size_t length) {
+uint32 do_hash(const char* text, size_t length) {
 	md5_context md5;
 	uint8 digest[16];
 	uint32* result = (uint32*)digest;
@@ -31,9 +33,9 @@ private:
 	size_t size;
 	
 public:
-	LinearCounter() : size(1250000) {
+	LinearCounter(int sz) : size(sz) {
 		vector = (char*)malloc(size);
-		memset(vector, 0,  size);
+		memset(vector, 0, size);
 	}
 	
 	~LinearCounter() {
@@ -41,10 +43,10 @@ public:
 	}
 	
 	void offer(const char* text, size_t textSize) {
-		int h = hash(text, textSize) % (size * 8);
+		uint32 h = do_hash(text, textSize) % ((int)size * 8);
 		
-		int byte = h / 8;
-		int bit = h % 8;
+		uint32 byte = h / 8;
+		uint32 bit = h % 8;
 		vector[byte] |= 1 << bit;
 	}
 	
@@ -58,26 +60,42 @@ public:
 		return result;
 	}
 	
-	int unusedBits() {
+	size_t unusedBits() {
 		return length() - usedBits();
 	}
 	
-	float usedBitsProportion() {
-		return (float)usedBits() / length();
+	double usedBitsProportion() {
+		return (double)usedBits() / length();
 	}
 	
-	int cardinalityEstimate() {
-		return length() * log((float)length() / unusedBits());
+	long cardinalityEstimate() {
+		return length() * log((double)length() / unusedBits());
 	}
 	
-	int length() {
+	size_t length() {
 		return size * 8;
 	}
 };
 
 int main(int argc, char** argv) {
+	po::options_description desc("Allowed options");
+	desc.add_options()
+		("help", "produce help message")
+		("size", po::value<int>()->default_value(125000), "the size of the linear counter in bytes");
+	
+	po::variables_map vm;
+	
+	po::basic_parsed_options<char> opts = po::command_line_parser(argc, argv).options(desc).allow_unregistered().run();
+	po::store(opts, vm);
+	
+  if (vm.count("help")) {
+		cout << desc << endl;
+		return 1;
+	}
+	
+	int size = vm["size"].as<int>();
 	string line;
-	LinearCounter a;
+	LinearCounter a(size);
 	
 	while (getline(cin, line)) {
 		a.offer(line.c_str(), line.size());

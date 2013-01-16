@@ -69,7 +69,12 @@ public:
 	}
 	
 	long cardinalityEstimate() {
-		return length() * log((double)length() / unusedBits());
+		size_t unused_bits = unusedBits();
+		if (unused_bits == 0) {
+			return -1;
+		} else {
+			return length() * log((double)length() / unusedBits());
+		}
 	}
 	
 	size_t length() {
@@ -81,7 +86,8 @@ int main(int argc, char** argv) {
 	po::options_description desc("Allowed options");
 	desc.add_options()
 		("help", "produce help message")
-		("size", po::value<int>()->default_value(125000), "the size of the linear counter in bytes");
+		("size", po::value<int>()->default_value(125000), "the size of the linear counter in bytes")
+		("buffer", po::value<int>()->default_value(1024), "the size of the line buffer in bytes");
 	
 	po::variables_map vm;
 	
@@ -97,10 +103,19 @@ int main(int argc, char** argv) {
 	string line;
 	LinearCounter a(size);
 	
-	while (getline(cin, line)) {
-		a.offer(line.c_str(), line.size());
+	int buffer_size = vm["size"].as<int>();
+	char buffer[buffer_size];
+	
+	while (fgets(buffer, buffer_size, stdin)) {
+		a.offer(buffer, strlen(buffer));
 	}
 	
-	cout << a.cardinalityEstimate() << endl;
-	return 0;
+	long est = a.cardinalityEstimate();
+	if (est < 0) {
+		cerr << "Estimate could not be given. Try greater mask (--size)" << endl;
+		return 255;
+	} else {
+		cout << est << endl;
+		return 0;
+	}
 }

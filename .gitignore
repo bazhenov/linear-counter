@@ -1,2 +1,14 @@
 .DS_Store
+*.swp
+/aclocal.m4
+/autom4te.cache
+/build
+/compile
+/depcomp
+/install-sh
+/missing
+/linear_counter-*
 /target
+*.in
+Makefile
+configure

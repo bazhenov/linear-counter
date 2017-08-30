@@ -7,8 +7,6 @@
 /depcomp
 /missing
 /linear_counter-*
-/target
-*.in
 Makefile
 *.o
 /config.log

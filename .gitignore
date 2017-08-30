@@ -5,7 +5,6 @@
 /build
 /compile
 /depcomp
-/missing
 /linear_counter-*
 Makefile
 *.o

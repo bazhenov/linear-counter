@@ -5,7 +5,6 @@
 /build
 /compile
 /depcomp
-/install-sh
 /missing
 /linear_counter-*
 /target

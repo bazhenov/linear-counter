@@ -7,6 +7,4 @@
 /build
 /CMakeFiles
 /cmake_install.cmake
-*.in
 /Makefile
-

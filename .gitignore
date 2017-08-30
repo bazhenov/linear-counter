@@ -12,3 +12,7 @@
 *.in
 Makefile
 configure
+*.o
+/config.log
+/config.status
+.deps

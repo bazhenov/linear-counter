@@ -35,5 +35,10 @@ int StreamSummary::estimateCount(const std::string& s) {
 }
 
 vector<pair<string, int>> StreamSummary::top() {
-	return vector<pair<string, int>>();
+	auto it = _counter_map.begin();
+	vector<pair<string, int>> result;
+	for (; it != _counter_map.end(); it++) {
+		result.push_back(make_pair(it->first, it->second.getCount()));
+	}
+	return result;
 }

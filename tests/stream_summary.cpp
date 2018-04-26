@@ -31,4 +31,18 @@ TEST(StreamSummary, shouldBeAbleToReturnValuesInFrequencyDecreasingOrder) {
 
 	auto top = s.top();
 	EXPECT_EQ(2, top.size());
+	EXPECT_EQ("first", top[0].first);
+	EXPECT_EQ(3, top[0].second);
+
+	EXPECT_EQ("second", top[1].first);
+	EXPECT_EQ(2, top[1].second);
+}
+
+TEST(StreamSummary, frequency) {
+	StreamSummary s;
+	s.offer("first");
+	EXPECT_EQ(s.estimateCount("first"), 1);
+
+	s.offer("first");
+	EXPECT_EQ(s.estimateCount("first"), 2);
 }

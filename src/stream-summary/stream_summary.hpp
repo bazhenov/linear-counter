@@ -13,7 +13,6 @@ class Counter {
 		void increment();
 };
 
-typedef std::pair<std::string, Counter> CounterPair;
 typedef std::map<std::string, Counter> CounterMap;
 
 class StreamSummary {
@@ -29,7 +28,7 @@ class StreamSummary {
 		std::vector<Counter> getTop();
 
 		int estimateCount(const std::string& s);
-
+		
 		/**
 		 * Возвращает отсортированный по убыванию частоты список позиций
 		 */
@@ -40,5 +39,3 @@ class StreamSummary {
 		 */
 		int getCountersCount();
 };
-
-

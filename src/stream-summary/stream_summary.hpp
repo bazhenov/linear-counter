@@ -1,38 +1,54 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <list>
+
+class Bucket;
 
 class Counter {
 	private:
-		std::string str;
-		int count;
+		unsigned int _count;
+		const std::list<Bucket> _buckets;
 
 	public:
-		Counter(const std::string& v) : str(v), count(1) {}
-		int getCount();
-		void increment();
+		Counter(unsigned int count) : _count(count), _buckets({}) {}
+		unsigned int getCount();
 };
 
-typedef std::map<std::string, Counter> CounterMap;
+class Bucket {
+private:
+	std::string _value;
+	unsigned int _count;
+	unsigned int _error;
+	const std::shared_ptr<Counter> _counter;
+
+public:
+	Bucket(const std::string& value, const std::shared_ptr<Counter> counter) : _value(value), _counter(counter) {}
+
+	void increment();
+	unsigned int value();
+};
+
+typedef std::map<std::string, Bucket> ValueMap;
 
 class StreamSummary {
 	private:
 		int _countersNo;
-		CounterMap _counter_map;
+		ValueMap _counter_map;
 
 	public:
 		StreamSummary(int countersNo) : _countersNo(countersNo) {}
 		StreamSummary() : StreamSummary(500) {}
 
 		void offer(const std::string& s);
-		std::vector<Counter> getTop();
+		std::vector<Bucket> getTop();
 
 		int estimateCount(const std::string& s);
-		
+
 		/**
 		 * Возвращает отсортированный по убыванию частоты список позиций
 		 */
-		std::vector<std::pair<std::string, int>> top();
+		std::vector<std::pair<std::string, unsigned int>> top();
 
 		/**
 		 * Возвращает количество отслеживаемых позиций в потоке

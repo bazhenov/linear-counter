@@ -32,26 +32,26 @@ public:
 typedef std::map<std::string, Bucket> ValueMap;
 
 class StreamSummary {
-	private:
-		int _countersNo;
-		ValueMap _counter_map;
+private:
+	int _countersNo;
+	ValueMap _counter_map;
 
-	public:
-		StreamSummary(int countersNo) : _countersNo(countersNo) {}
-		StreamSummary() : StreamSummary(500) {}
+public:
+	StreamSummary(int countersNo) : _countersNo(countersNo) {}
+	StreamSummary() : StreamSummary(500) {}
 
-		void offer(const std::string& s);
-		std::vector<Bucket> getTop();
+	void offer(const std::string& s);
+	std::vector<Bucket> getTop();
 
-		int estimateCount(const std::string& s);
+	int estimateCount(const std::string& s);
 
-		/**
-		 * Возвращает отсортированный по убыванию частоты список позиций
-		 */
-		std::vector<std::pair<std::string, unsigned int>> top();
+	/**
+	 * Возвращает отсортированный по убыванию частоты список позиций
+	 */
+	std::vector<std::pair<std::string, unsigned int>> top();
 
-		/**
-		 * Возвращает количество отслеживаемых позиций в потоке
-		 */
-		int getCountersCount();
+	/**
+	 * Возвращает количество отслеживаемых позиций в потоке
+	 */
+	int getCountersCount();
 };

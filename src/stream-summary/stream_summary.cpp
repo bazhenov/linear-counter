@@ -24,6 +24,7 @@ void StreamSummary::offer(const string& s) {
 	} else {
 		// existing element
 		v->second.increment();
+		auto& bucket = v->second;
 	}
 }
 
